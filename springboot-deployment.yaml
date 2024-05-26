@@ -1,0 +1,48 @@
+# springboot-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sneaker-spring-deployment
+spec:
+  selector:
+    matchLabels:
+      app: sneaker-spring
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: sneaker-spring
+    spec:
+      containers:
+      - name: sneaker-spring
+        image: lovetruongan/sneaker-spring:lastest # Replace with your actual image name
+        env:
+        - name: SPRING_DATASOURCE_URL
+          value: "jdbc:mysql://mysql8-service:3306/shopsneaker?serverTimezone=UTC&allowPublicKeyRetrieval=true"
+        - name: SPRING_DATASOURCE_USERNAME
+          value: "root"
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: "admin"
+        ports:
+        - containerPort: 8089
+      #   volumeMounts:
+      #   - name: sneaker-data
+      #     mountPath: /app/data
+      # volumes:
+      # - name: sneaker-data
+      #   persistentVolumeClaim:
+      #     claimName: sneaker-pv-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sneaker-spring-service
+spec:
+  selector:
+    app: sneaker-spring
+  ports:
+    - protocol: TCP
+      port: 8089
+      targetPort: 8089
+  type: NodePort
+  nodePort: 30002
