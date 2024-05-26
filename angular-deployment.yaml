@@ -24,11 +24,11 @@ kind: Service
 metadata:
   name: sneaker-angular-service
 spec:
+  type: NodePort
   selector:
     app: sneaker-angular
   ports:
     - protocol: TCP
       port: 4200
-      targetPort: 4200
-  type: nodePort
-  nodePort: 30003
+      targetPort: 80
+      nodePort: 30003
